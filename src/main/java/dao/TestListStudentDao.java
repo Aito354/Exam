@@ -12,20 +12,20 @@ import bean.TestListStudent;
 public class TestListStudentDao extends Dao{
 
 	private String baseSql =
-	   "select" +
-	   "sub.name as subject_name," +
-	   "sub.cd as subject_cd," +
+	   "select " +
+	   "sub.name as subject_name, " +
+	   "sub.cd as subject_cd, " +
 	   "t.no,"+
-	   "t.point" +
-	   "from test t" +
-	   "join subject sub on t.subject_cd = sub.cd";
+	   "t.point " +
+	   "from test t " +
+	   "join subject sub on t.subject_cd = sub.cd ";
 	
 	public List<TestListStudent> filter(Student student) throws Exception{
 		List<TestListStudent> list = new ArrayList<>();
 		Connection con = getConnection();
 		String sql = baseSql + "where t.student_no = ?";
 		PreparedStatement st = con.prepareStatement(sql);
-		st.setInt(1, student.getNo());
+		st.setString(1, String.valueOf(student.getNo()));
 		ResultSet rs = st.executeQuery();
 		list = postFilter(rs);
 		st.close();
