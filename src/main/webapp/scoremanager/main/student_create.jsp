@@ -22,7 +22,8 @@
 
 <br>
 
-<form action="scoremanager.main.StudentCreateExecute.action" method="post">
+<!-- 学生登録フォーム -->
+<form action="${pageContext.request.contextPath}/scoremanager/main/StudentCreateExecute.action" method="post">
 
     <!-- 学生番号 -->
     <div>
@@ -63,6 +64,16 @@
 
     <br>
 
+    <!-- 在学中（必要な場合） -->
+    <div>
+        <label>
+            <input type="checkbox" name="isAttend" checked>
+            在学中
+        </label>
+    </div>
+
+    <br>
+
     <!-- 登録ボタン -->
     <div>
         <input type="submit" value="登録して終了">
@@ -72,10 +83,9 @@
 
 <br>
 
-<!-- 戻る -->
-<a href="/exam/scoremanager.main.StudentList.action">
+<!-- 一覧に戻る -->
+<a href="${pageContext.request.contextPath}/scoremanager/main/StudentList.action">
     一覧に戻る
 </a>
-
 </body>
 </html>

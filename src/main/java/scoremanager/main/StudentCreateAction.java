@@ -25,7 +25,7 @@ public class StudentCreateAction extends Action {
         req.setAttribute("classList", classList);
 
         
-        req.getRequestDispatcher("/scoremanager/student_create.jsp")
-           .forward(req, res);
+        req.getRequestDispatcher("/scoremanager/main/student_create.jsp")
+        .forward(req, res);
     }
 }

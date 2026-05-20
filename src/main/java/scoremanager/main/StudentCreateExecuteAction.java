@@ -17,19 +17,22 @@ public class StudentCreateExecuteAction extends Action {
     public void execute(HttpServletRequest req, HttpServletResponse res)
             throws Exception {
 
+        // セッションから学校情報を取得
         HttpSession session = req.getSession();
         School school = (School) session.getAttribute("school");
 
+        // フォームから値を取得
         String no = req.getParameter("no");
         String name = req.getParameter("name");
         String entYear = req.getParameter("entYear");
         String classNum = req.getParameter("classNum");
 
+        // エラーメッセージ格納用
         List<String> errors = new ArrayList<>();
 
-        
+        // -----------------------------
         // 入力チェック
-        
+        // -----------------------------
         if (no == null || no.isEmpty()) {
             errors.add("学生番号を入力してください");
         }
@@ -39,10 +42,14 @@ public class StudentCreateExecuteAction extends Action {
         }
 
         if (entYear == null || entYear.isEmpty()) {
-            errors.add("入学年度を選択してください");
+            errors.add("入学年度を入力してください");
         }
 
-        // 数値チェック
+        if (classNum == null || classNum.isEmpty()) {
+            errors.add("クラスを選択してください");
+        }
+
+        // 数値変換
         int noInt = 0;
         int entYearInt = 0;
         int classNumInt = 0;
@@ -65,10 +72,29 @@ public class StudentCreateExecuteAction extends Action {
             errors.add("クラス番号が不正です");
         }
 
-        
+        // -----------------------------
         // エラーがある場合
-        
-        if (errors.size() > 0) {
+        // -----------------------------
+        if (!errors.isEmpty()) {
+            req.setAttribute("errors", errors);
+            req.setAttribute("no", no);
+            req.setAttribute("name", name);
+            req.setAttribute("entYear", entYear);
+            req.setAttribute("classNum", classNum);
+
+            // student_create.jsp の配置:
+            // src/main/webapp/scoremanager/main/student_create.jsp
+            req.getRequestDispatcher("/scoremanager/main/student_create.jsp")
+               .forward(req, res);
+            return;
+        }
+
+        // DAO生成
+        StudentDao dao = new StudentDao();
+
+        // 学生番号重複チェック
+        if (dao.get(no) != null) {
+            errors.add("学生番号が重複しています");
 
             req.setAttribute("errors", errors);
             req.setAttribute("no", no);
@@ -76,41 +102,34 @@ public class StudentCreateExecuteAction extends Action {
             req.setAttribute("entYear", entYear);
             req.setAttribute("classNum", classNum);
 
-            req.getRequestDispatcher("/scoremanager/student_create.jsp")
+            req.getRequestDispatcher("/scoremanager/main/student_create.jsp")
                .forward(req, res);
             return;
         }
 
-        
-        StudentDao dao = new StudentDao();
-
-        if (dao.get(no) != null) {
-            errors.add("学生番号が重複しています");
-
-            req.setAttribute("errors", errors);
-            req.getRequestDispatcher("/scoremanager/student_create.jsp")
-               .forward(req, res);
-            return;
-        }
-
-        
-        // 登録
-        
+        // -----------------------------
+        // 登録処理
+        // -----------------------------
         Student s = new Student();
-
         s.setNo(noInt);
         s.setName(name);
         s.setEntYear(entYearInt);
         s.setClassNum(classNumInt);
         s.setAttend(true);
-        s.setSchoolCd(school.getCd());
+
+        if (school != null) {
+            s.setSchoolCd(school.getCd());
+        }
 
         dao.save(s);
 
-       
-        // 完了画面
-        
-        req.getRequestDispatcher("/scoremanager/student_create_done.jsp")
+        // -----------------------------
+        // 完了画面へ
+        // student_create_done.jsp の配置:
+        // src/main/webapp/scoremanager/main/student_create_done.jsp
+        // -----------------------------
+        req.setAttribute("student", s);
+        req.getRequestDispatcher("/scoremanager/main/student_create_done.jsp")
            .forward(req, res);
     }
 }

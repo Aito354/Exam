@@ -1,11 +1,10 @@
 package bean;
 
 public class Student {
-
-    private int no;         
+    private int no;
     private String name;
     private int entYear;
-    private int classNum;   
+    private int classNum;
     private boolean attend;
     private String schoolCd;
 

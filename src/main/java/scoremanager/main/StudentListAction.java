@@ -1,34 +1,56 @@
 package scoremanager.main;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import bean.School;
 import bean.Student;
 import dao.StudentDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
 public class StudentListAction extends Action {
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res)
-            throws Exception {
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
-        // セッションから学校情報を取得
-        HttpSession session = req.getSession();
-        School school = (School) session.getAttribute("school");
+        // 検索条件取得
+        String entYear = req.getParameter("entYear");
+        String classNum = req.getParameter("classNum");
+        String isAttend = req.getParameter("isAttend");
 
         // DAO
         StudentDao dao = new StudentDao();
-        List<Student> list = dao.filterBySchool(school);
+
+        // 学生一覧取得
+        List<Student> studentList = dao.filter(
+                entYear,
+                classNum,
+                isAttend != null
+        );
+
+        // 入学年度一覧
+        List<Integer> entYearList = new ArrayList<>();
+        for (int year = 2020; year <= 2030; year++) {
+            entYearList.add(year);
+        }
+
+        // クラス一覧
+        List<String> classNumList = new ArrayList<>();
+        classNumList.add("101");
+        classNumList.add("102");
+        classNumList.add("201");
+        classNumList.add("202");
 
         // JSPへ渡す
-        req.setAttribute("students", list);
+        req.setAttribute("studentList", studentList);
+        req.setAttribute("entYearList", entYearList);
+        req.setAttribute("classNumList", classNumList);
 
-        // 画面表示
-        req.getRequestDispatcher("/scoremanager/student_list.jsp")
+        // student_list.jsp を表示
+        // 保存場所:
+        // src/main/webapp/scoremanager/main/student_list.jsp
+        req.getRequestDispatcher("/scoremanager/main/student_list.jsp")
            .forward(req, res);
     }
 }
