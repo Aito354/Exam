@@ -32,7 +32,7 @@
                 <div class="col">
                     <div>成績管理</div>
                     <div>
-                        <a href="${pageContext.request.contextPath}/scoremanager/main/StudentCreate">
+                        <a href="${pageContext.request.contextPath}/scoremanager/main/TestRegist.action">
                             成績登録
                         </a>
                     </div>
