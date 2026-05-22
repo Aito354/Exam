@@ -1,314 +1,285 @@
-
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>学生別成績一覧</title>
+<c:import url="/common/base.jsp">
 
-<style>
+    <c:param name="title">
+        成績一覧（学生）
+    </c:param>
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+    <c:param name="content">
 
-body{
-    font-family:sans-serif;
-    background-color:#f5f5f5;
-}
+        <style>
 
-/* ヘッダー */
-.header{
-    background-color:#dfe8f3;
-    height:70px;
-    display:flex;
-    align-items:center;
-    padding-left:30px;
-    font-size:32px;
-    font-weight:bold;
-}
+        .area{
+            border:1px solid #ddd;
+            padding:20px;
+            width:900px;
+            margin:20px auto;
+            background:#fff;
+        }
 
-/* 全体 */
-.container{
-    display:flex;
-    min-height:100vh;
-}
+        select,input{
+            height:32px;
+            padding:4px 8px;
+            font-size:14px;
+        }
 
-/* サイドバー */
-.sidebar{
-    width:200px;
-    background-color:#ffffff;
-    padding:20px;
-    border-right:1px solid #cccccc;
-}
+        button{
+            height:32px;
+            padding:0 15px;
+            background:#666;
+            color:#fff;
+            border:none;
+            border-radius:3px;
+            cursor:pointer;
+        }
 
-.sidebar a{
-    display:block;
-    margin-bottom:15px;
-    color:#4a6ee0;
-    text-decoration:none;
-}
+        table{
+            width:100%;
+            border-collapse:collapse;
+            font-size:14px;
+        }
 
-.sidebar a:hover{
-    text-decoration:underline;
-}
+        th,td{
+            border-bottom:1px solid #ddd;
+            padding:10px;
+            text-align:center;
+        }
 
-/* メイン */
-.main{
-    flex:1;
-    padding:20px;
-}
+        th{
+            background:#f7f7f7;
+        }
 
-/* タイトル */
-.page-title{
-    background-color:#eeeeee;
-    padding:15px;
-    font-size:24px;
-    font-weight:bold;
-    margin-bottom:20px;
-}
+        h2{
+            margin-bottom:20px;
+        }
 
-/* 検索エリア */
-.search-area{
-    background-color:#ffffff;
-    padding:20px;
-    border:1px solid #dddddd;
-    margin-bottom:20px;
-}
+        .student-name{
+            margin:15px 0;
+            font-size:14px;
+            font-weight:bold;
+        }
 
-.row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    align-items:center;
-}
+        .message{
+            color:deepskyblue;
+            font-size:13px;
+        }
 
-/* フォーム */
-input[type="text"],
-select{
-    padding:5px;
-}
+        </style>
 
-input[type="submit"]{
-    padding:6px 15px;
-    background-color:#4a6ee0;
-    color:white;
-    border:none;
-    cursor:pointer;
-}
-
-input[type="submit"]:hover{
-    background-color:#3451aa;
-}
-
-/* テーブル */
-table{
-    width:100%;
-    border-collapse:collapse;
-    background-color:#ffffff;
-}
-
-th{
-    background-color:#eeeeee;
-    border:1px solid #cccccc;
-    padding:10px;
-}
-
-td{
-    border:1px solid #cccccc;
-    padding:10px;
-    text-align:center;
-}
-
-.student-info{
-    margin-bottom:10px;
-    font-weight:bold;
-}
-
-/* エラー */
-.error{
-    color:red;
-    margin-top:10px;
-    font-weight:bold;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<!-- ヘッダー -->
-<div class="header">
-    得点管理システム
-</div>
-
-<div class="container">
-
-    <!-- サイドバー -->
-    <div class="sidebar">
-
-        <a href="<c:url value='Menu.action' />">メニュー</a>
-
-        <a href="<c:url value='StudentList.action' />">学生管理</a>
-
-        <b>成績管理</b>
-
-        <a href="<c:url value='TestRegist.action' />">成績登録</a>
-
-        <a href="<c:url value='TestList.action' />">成績参照</a>
-
-        <a href="<c:url value='SubjectList.action' />">科目管理</a>
-
-    </div>
-
-    <!-- メイン -->
-    <div class="main">
-
-        <div class="page-title">
-            学生別成績一覧
-        </div>
+        <h2>成績一覧（学生）</h2>
 
         <!-- 検索エリア -->
-        <div class="search-area">
+        <div class="area">
 
-            <form action="TestList.action" method="post">
+            <!-- 科目情報 -->
+            <form action="TestList.action" method="get">
 
-                <div class="row">
+                <table style="border:none;">
 
-                    学生番号
-                    <input type="text" name="no" value="${param.no}">
+                    <tr style="border:none;">
 
-                    入学年度
-                    <select name="entYear">
-                        <option value="">--------</option>
+                        <td style="border:none;">
+                            科目情報
+                        </td>
 
-                        <option value="2024"
-                            <c:if test="${param.entYear == '2024'}">
-                                selected
-                            </c:if>>
-                            2024
-                        </option>
+                        <!-- 入学年度 -->
+                        <td style="border:none;">
 
-                        <option value="2025"
-                            <c:if test="${param.entYear == '2025'}">
-                                selected
-                            </c:if>>
-                            2025
-                        </option>
-                    </select>
+                            入学年度<br>
 
-                    クラス
-                    <select name="classNum">
-                        <option value="">--------</option>
+                            <select name="entYear">
 
-                        <option value="1"
-                            <c:if test="${param.classNum == '1'}">
-                                selected
-                            </c:if>>
-                            1
-                        </option>
+                                <option value="">--------</option>
 
-                        <option value="2"
-                            <c:if test="${param.classNum == '2'}">
-                                selected
-                            </c:if>>
-                            2
-                        </option>
-                    </select>
+                                <option value="2023"
+                                    <c:if test="${param.entYear == '2023'}">
+                                        selected
+                                    </c:if>>
+                                    2023
+                                </option>
 
-                    科目
-                    <select name="subjectCd">
-                        <option value="">--------</option>
+                                <option value="2024"
+                                    <c:if test="${param.entYear == '2024'}">
+                                        selected
+                                    </c:if>>
+                                    2024
+                                </option>
 
-                        <option value="JAVA"
-                            <c:if test="${param.subjectCd == 'JAVA'}">
-                                selected
-                            </c:if>>
-                            JAVA
-                        </option>
+                                <option value="2025"
+                                    <c:if test="${param.entYear == '2025'}">
+                                        selected
+                                    </c:if>>
+                                    2025
+                                </option>
 
-                        <option value="DB"
-                            <c:if test="${param.subjectCd == 'DB'}">
-                                selected
-                            </c:if>>
-                            DB
-                        </option>
-                    </select>
+                            </select>
 
-                    回数
-                    <select name="num">
-                        <option value="">--------</option>
+                        </td>
 
-                        <option value="1"
-                            <c:if test="${param.num == '1'}">
-                                selected
-                            </c:if>>
-                            1
-                        </option>
+                        <!-- クラス -->
+                        <td style="border:none;">
 
-                        <option value="2"
-                            <c:if test="${param.num == '2'}">
-                                selected
-                            </c:if>>
-                            2
-                        </option>
-                    </select>
+                            クラス<br>
 
-                    <input type="submit" value="検索">
+                            <select name="classNum">
 
-                </div>
+                                <option value="">--------</option>
+
+                                <option value="1"
+                                    <c:if test="${param.classNum == '1'}">
+                                        selected
+                                    </c:if>>
+                                    1
+                                </option>
+
+                                <option value="2"
+                                    <c:if test="${param.classNum == '2'}">
+                                        selected
+                                    </c:if>>
+                                    2
+                                </option>
+
+                            </select>
+
+                        </td>
+
+                        <!-- 科目 -->
+                        <td style="border:none;">
+
+                            科目<br>
+
+                            <select name="subjectCd">
+
+                                <option value="">--------</option>
+
+                                <option value="JAVA">JAVA</option>
+                                <option value="DB">DB</option>
+                                <option value="KOKUGO">国語</option>
+                                <option value="SUGAKU">数学</option>
+                                <option value="RIKA">理科</option>
+                                <option value="JOHO1">情報処理基礎知識Ⅰ</option>
+                                <option value="EIGO">英語コミュニケーション概論</option>
+                                <option value="JFRAME">Javaフレームワーク</option>
+                                <option value="GIT">Git</option>
+                                <option value="H2">H2</option>
+                                <option value="ID">ID管理術</option>
+                                <option value="JSYSTEM">Javaシステム開発</option>
+                                <option value="AWS">AWS</option>
+                                <option value="BEAN">Bean</option>
+                                <option value="C">C言語</option>
+                                <option value="ERROR">エラー対処術</option>
+
+                            </select>
+
+                        </td>
+
+                        <!-- 回数 -->
+                        <td style="border:none;">
+
+                            回数<br>
+
+                            <select name="num">
+
+                                <option value="">--------</option>
+
+                                <option value="1"
+                                    <c:if test="${param.num == '1'}">
+                                        selected
+                                    </c:if>>
+                                    1
+                                </option>
+
+                                <option value="2"
+                                    <c:if test="${param.num == '2'}">
+                                        selected
+                                    </c:if>>
+                                    2
+                                </option>
+
+                            </select>
+
+                        </td>
+
+                        <td style="border:none;">
+                            <br>
+                            <button type="submit">検索</button>
+                        </td>
+
+                    </tr>
+
+                </table>
 
             </form>
 
-            <!-- エラー -->
-            <c:if test="${not empty error}">
-                <div class="error">
-                    ${error}
-                </div>
-            </c:if>
+            <hr>
+
+            <!-- 学生情報 -->
+            <form action="TestListStudentExecute.action" method="get">
+
+                学生情報　
+
+                学生番号
+
+                <input
+                    type="text"
+                    name="no"
+                    value="${param.no}"
+                    placeholder="学生番号を入力してください">
+
+                <button type="submit">検索</button>
+
+            </form>
+
+            <br>
+
+            <p class="message">
+                入学年度とクラスと科目を選択してください
+            </p>
 
         </div>
 
-        <!-- 学生情報 -->
+        <!-- 一覧 -->
         <c:if test="${not empty list}">
 
-            <div class="student-info">
-                学生番号：${param.no}
-            </div>
+            <div class="area">
 
-            <!-- 一覧 -->
-            <table>
+                <div class="student-name">
+                    氏名：${student.name}（${student.no}）
+                </div>
 
-                <tr>
-                    <th>科目名</th>
-                    <th>科目コード</th>
-                    <th>回数</th>
-                    <th>点数</th>
-                </tr>
-
-                <c:forEach var="obj" items="${list}">
+                <table>
 
                     <tr>
-                        <td>${obj.subjectName}</td>
-                        <td>${obj.subjectCd}</td>
-                        <td>${obj.num}</td>
-                        <td>${obj.point}</td>
+                        <th>科目名</th>
+                        <th>科目コード</th>
+                        <th>回数</th>
+                        <th>点数</th>
                     </tr>
 
-                </c:forEach>
+                    <c:forEach var="obj" items="${list}">
 
-            </table>
+                        <tr>
+
+                            <td>${obj.subjectName}</td>
+
+                            <td>${obj.subjectCd}</td>
+
+                            <td>${obj.num}</td>
+
+                            <td>${obj.point}</td>
+
+                        </tr>
+
+                    </c:forEach>
+
+                </table>
+
+            </div>
 
         </c:if>
 
-    </div>
+    </c:param>
 
-</div>
-
-</body>
-</html>
+</c:import>
