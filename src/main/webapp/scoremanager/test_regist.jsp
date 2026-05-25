@@ -58,6 +58,9 @@ h2{
     <c:param name="content">
 
         <h2>成績管理</h2>
+        
+  
+
 
         <div class="area">
 
@@ -180,6 +183,8 @@ h2{
                                 <input type="number"
                                        name="point"
                                        value="${t.point}">
+                                       
+                                       
 
                                 <c:if test="${sessionScope.error != null}">
                                     <div class="error">

@@ -50,6 +50,11 @@ public class TestRegistAction extends Action {
 	        String classNum = request.getParameter("f2");
 	        String subjectCd = request.getParameter("f3");
 	        String numStr = request.getParameter("f4");
+	        
+	        if (entYearStr == null) entYearStr = "";
+	        if (classNum == null) classNum = "";
+	        if (subjectCd == null) subjectCd = "";
+	        if (numStr == null) numStr = "";
 
 	        request.setAttribute("f1", entYearStr);
 	        request.setAttribute("f2", classNum);
@@ -77,6 +82,23 @@ public class TestRegistAction extends Action {
 
 	        int entYear = Integer.parseInt(entYearStr);
 	        int num = Integer.parseInt(numStr);
+	        
+	        try {
+	            entYear = Integer.parseInt(entYearStr);
+	            num = Integer.parseInt(numStr);
+	        } catch (NumberFormatException e) {
+
+	            request.setAttribute(
+	                "error",
+	                "数値が不正です"
+	            );
+
+	            request.getRequestDispatcher(
+	                "/scoremanager/test_regist.jsp"
+	            ).forward(request, response);
+
+	            return;
+	        }
 
 	        Subject subject = sDao.get(subjectCd);
 

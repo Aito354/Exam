@@ -43,10 +43,41 @@ public class TestRegistExecuteAction extends Action {
 
         String entYear =
                 request.getParameter("entYear");
+        
+        if (studentNo == null || point == null ||
+        	    subjectCd == null || classNum == null ||
+        	    entYear == null || request.getParameter("num") == null) {
+
+        	    request.getSession().setAttribute(
+        	        "error",
+        	        "未入力の項目があります"
+        	    );
+
+        	    response.sendRedirect(
+        	        "TestRegist.action"
+        	    );
+
+        	    return;
+        	}
 
         int num = Integer.parseInt(
                 request.getParameter("num")
         );
+        
+        
+
+        try {
+            num = Integer.parseInt(request.getParameter("num"));
+        } catch (Exception e) {
+
+            request.getSession().setAttribute(
+                "error",
+                "回数が不正です"
+            );
+
+            response.sendRedirect("TestRegist.action");
+            return;
+        }
 
         SubjectDao subDao = new SubjectDao();
         Subject subject = subDao.get(subjectCd);
@@ -118,6 +149,10 @@ public class TestRegistExecuteAction extends Action {
             test.setNo(num);
             test.setPoint(p);
 
+            
+            if (student == null || subject == null) {
+                continue;
+            }
             testDao.save(test, connection);
         }
 
