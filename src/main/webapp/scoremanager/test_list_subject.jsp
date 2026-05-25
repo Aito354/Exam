@@ -148,11 +148,15 @@
                                     <c:choose>
 
                                         <c:when test="${f3 eq s.cd}">
-                                            <option value="${s.cd}" selected>${s.name}</option>
+                                            <option value="${s.cd}" selected>
+                                                ${s.name}
+                                            </option>
                                         </c:when>
 
                                         <c:otherwise>
-                                            <option value="${s.cd}">${s.name}</option>
+                                            <option value="${s.cd}">
+                                                ${s.name}
+                                            </option>
                                         </c:otherwise>
 
                                     </c:choose>
