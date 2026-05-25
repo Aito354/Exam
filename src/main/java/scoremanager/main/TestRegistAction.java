@@ -1,6 +1,5 @@
 package scoremanager.main;
 
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,112 +14,121 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
-
-
 public class TestRegistAction extends Action {
-	
-	 @Override
-	    public void execute(
-	            HttpServletRequest request,
-	            HttpServletResponse response
-	    ) throws Exception {
-		 
-		 HttpSession session = request.getSession();
- 	    request.setAttribute("user", session.getAttribute("user"));
-		 
-		 School school = new School();
-	        school.setCd("oom");
 
-	        int year = LocalDate.now().getYear();
-	        request.setAttribute("year", year);
+    @Override
+    public void execute(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws Exception {
 
-	        ClassNumDao cDao = new ClassNumDao();
-	        request.setAttribute(
-	                "classList",
-	                cDao.filter(school)
-	        );
+        HttpSession session = request.getSession();
+        request.setAttribute("user", session.getAttribute("user"));
 
-	        SubjectDao sDao = new SubjectDao();
-	        request.setAttribute(
-	                "subjectList",
-	                sDao.filter()
-	        );
+        // 学校情報
+        School school = new School();
+        school.setCd("oom");
 
-	        String entYearStr = request.getParameter("f1");
-	        String classNum = request.getParameter("f2");
-	        String subjectCd = request.getParameter("f3");
-	        String numStr = request.getParameter("f4");
-	        
-	        if (entYearStr == null) entYearStr = "";
-	        if (classNum == null) classNum = "";
-	        if (subjectCd == null) subjectCd = "";
-	        if (numStr == null) numStr = "";
+        // =========================
+        // ① 初期表示データ
+        // =========================
+        int year = LocalDate.now().getYear();
+        request.setAttribute("year", year);
 
-	        request.setAttribute("f1", entYearStr);
-	        request.setAttribute("f2", classNum);
-	        request.setAttribute("f3", subjectCd);
-	        request.setAttribute("f4", numStr);
+        ClassNumDao cDao = new ClassNumDao();
+        request.setAttribute("classList", cDao.filter(school));
 
-	        if (
-	            entYearStr == null || entYearStr.isEmpty() ||
-	            classNum == null || classNum.isEmpty() ||
-	            subjectCd == null || subjectCd.isEmpty() ||
-	            numStr == null || numStr.isEmpty()
-	        ) {
+        SubjectDao sDao = new SubjectDao();
+        request.setAttribute("subjectList", sDao.filter());
 
-	            request.setAttribute(
-	                "error",
-	                "入学年度とクラスと科目と回数を選択してください"
-	            );
+        // =========================
+        // ② パラメータ取得
+        // =========================
+        String entYearStr = request.getParameter("f1");
+        String classNum = request.getParameter("f2");
+        String subjectCd = request.getParameter("f3");
+        String numStr = request.getParameter("f4");
 
-	            request.getRequestDispatcher(
-	                    "/scoremanager/test_regist.jsp"
-	            ).forward(request, response);
+        // null対策
+        if (entYearStr == null) entYearStr = "";
+        if (classNum == null) classNum = "";
+        if (subjectCd == null) subjectCd = "";
+        if (numStr == null) numStr = "";
 
-	            return;
-	        }
+        // 入力保持
+        request.setAttribute("f1", entYearStr);
+        request.setAttribute("f2", classNum);
+        request.setAttribute("f3", subjectCd);
+        request.setAttribute("f4", numStr);
 
-	        int entYear = Integer.parseInt(entYearStr);
-	        int num = Integer.parseInt(numStr);
-	        
-	        try {
-	            entYear = Integer.parseInt(entYearStr);
-	            num = Integer.parseInt(numStr);
-	        } catch (NumberFormatException e) {
+        // =========================
+        // ③ 未入力チェック
+        // =========================
+        if (entYearStr.isEmpty()
+                || classNum.isEmpty()
+                || subjectCd.isEmpty()
+                || numStr.isEmpty()) {
 
-	            request.setAttribute(
-	                "error",
-	                "数値が不正です"
-	            );
+            request.setAttribute(
+                    "error",
+                    "入学年度とクラスと科目と回数を選択してください"
+            );
 
-	            request.getRequestDispatcher(
-	                "/scoremanager/test_regist.jsp"
-	            ).forward(request, response);
+            request.getRequestDispatcher(
+                    "/scoremanager/test_regist.jsp"
+            ).forward(request, response);
 
-	            return;
-	        }
+            return;
+        }
 
-	        Subject subject = sDao.get(subjectCd);
+        // =========================
+        // ④ 数値変換（安全）
+        // =========================
+        int entYear;
+        int num;
 
-	        TestDao dao = new TestDao();
+        try {
+            entYear = Integer.parseInt(entYearStr);
+            num = Integer.parseInt(numStr);
+        } catch (NumberFormatException e) {
 
-	        List<Test> list = dao.filter(
-	                entYear,
-	                classNum,
-	                subject,
-	                num,
-	                school
-	        );
+            request.setAttribute(
+                    "error",
+                    "数値が不正です"
+            );
 
-	        request.setAttribute("list", list);
+            request.getRequestDispatcher(
+                    "/scoremanager/test_regist.jsp"
+            ).forward(request, response);
 
-	        request.getRequestDispatcher(
-	                "/scoremanager/test_regist.jsp"
-	        ).forward(request, response);
-	    }
-	}
-	 
+            return;
+        }
 
-	
+        // =========================
+        // ⑤ 科目取得
+        // =========================
+        Subject subject = sDao.get(subjectCd);
 
-    
+        // =========================
+        // ⑥ 検索処理
+        // =========================
+        TestDao dao = new TestDao();
+
+        List<Test> list = dao.filter(
+                entYear,
+                classNum,
+                subject,
+                num,
+                school
+        );
+
+        request.setAttribute("list", list);
+
+        // =========================
+        // ⑦ 画面表示
+        // =========================
+        request.getRequestDispatcher(
+                "/scoremanager/test_regist.jsp"
+        ).forward(request, response);
+    }
+}
