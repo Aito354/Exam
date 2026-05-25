@@ -67,6 +67,18 @@
         </style>
 
         <h2>成績一覧（科目）</h2>
+        
+        <c:if test="${not empty error}">
+    <p style="color:red; font-size:14px;">
+        ${error}
+    </p>
+</c:if>
+
+<c:if test="${not empty message}">
+    <p style="color:deepskyblue; font-size:14px;">
+        ${message}
+    </p>
+</c:if>
 
         <div class="area">
 

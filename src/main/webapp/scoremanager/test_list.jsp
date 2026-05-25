@@ -44,6 +44,18 @@ h2{
 
     <c:param name="title">
         成績参照
+        
+        <c:if test="${not empty error}">
+    <p style="color:red; font-size:14px;">
+        ${error}
+    </p>
+</c:if>
+
+<c:if test="${not empty message}">
+    <p style="color:deepskyblue; font-size:14px;">
+        ${message}
+    </p>
+</c:if>
     </c:param>
 
     <c:param name="content">
