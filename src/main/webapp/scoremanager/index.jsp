@@ -1,17 +1,23 @@
 <%-- indexリダイレクトページ --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java"
+contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title></title>
+<meta charset="UTF-8">
+<title>得点管理システム</title>
+
 <script>
-//ログインページにリダイレクト
-location.href="/exam/scoremanager/Login.action";
+
+// ログインページへ移動
+location.href =
+"${pageContext.request.contextPath}/scoremanager/Login.action";
+
 </script>
+
 </head>
 <body>
-
 </body>
 </html>

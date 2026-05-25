@@ -12,10 +12,6 @@ import bean.Student;
 public class StudentDao extends Dao {
 
     // ■ 学校別一覧取得
-<<<<<<< HEAD
-=======
-    // コメントを追加
->>>>>>> branch 'master' of https://github.com/Aito354/Exam.git
     public List<Student> filterBySchool(School school) throws Exception {
 
         List<Student> list = new ArrayList<>();
