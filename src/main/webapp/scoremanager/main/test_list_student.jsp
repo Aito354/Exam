@@ -232,13 +232,13 @@
                 学生番号
 
                 <input
-                    type="text"
+                    type="number"
                     name="no"
                     value="${param.no}"
                     placeholder="学生番号を入力してください"
                     required
-                    pattern="[A-Za-z]+"
-                    title="英字のみ入力してください">
+                  
+                  
 
                 <button type="submit">
                     検索

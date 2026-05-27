@@ -137,7 +137,7 @@ body{
 	<div class="main">
 
 		<div class="title">
-			科目情報登録
+			学生情報登録
 		</div>
 
 		<div class="complete">
@@ -146,12 +146,12 @@ body{
 
 		<div class="links">
 
-			<a href="SubjectCreate.action">
+			<a href="StudentCreate.action">
 				戻る
 			</a>
 
 			<a href="SubjectList.action">
-				科目一覧
+				学生一覧
 			</a>
 
 		</div>
