@@ -58,9 +58,13 @@ h2{
     <c:param name="content">
 
         <h2>成績管理</h2>
-        
-  
 
+        <!-- ✅ エラーメッセージ（ここに統一） -->
+        <c:if test="${not empty error}">
+            <div class="error">
+                ${error}
+            </div>
+        </c:if>
 
         <div class="area">
 
@@ -183,12 +187,10 @@ h2{
                                 <input type="number"
                                        name="point"
                                        value="${t.point}">
-                                       
-                                       
 
-                                <c:if test="${sessionScope.error != null}">
+                                <c:if test="${not empty error}">
                                     <div class="error">
-                                        ${sessionScope.error}
+                                        ${error}
                                     </div>
                                 </c:if>
 
@@ -200,21 +202,10 @@ h2{
 
                 </table>
 
-                <input type="hidden"
-                       name="subjectCd"
-                       value="${f3}">
-
-                <input type="hidden"
-                       name="num"
-                       value="${f4}">
-
-                <input type="hidden"
-                       name="classNum"
-                       value="${f2}">
-
-                <input type="hidden"
-                       name="entYear"
-                       value="${f1}">
+                <input type="hidden" name="subjectCd" value="${f3}">
+                <input type="hidden" name="num" value="${f4}">
+                <input type="hidden" name="classNum" value="${f2}">
+                <input type="hidden" name="entYear" value="${f1}">
 
                 <br>
 
@@ -226,7 +217,7 @@ h2{
 
         </c:if>
 
-        <c:remove var="error" scope="session"/>
+        <c:remove var="error" scope="request"/>
 
     </c:param>
 
