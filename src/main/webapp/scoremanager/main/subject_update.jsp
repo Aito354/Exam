@@ -6,6 +6,9 @@
 <%
 Subject subject =
 (Subject)request.getAttribute("subject");
+
+String error =
+(String)request.getAttribute("error");
 %>
 
 <!DOCTYPE html>
@@ -17,6 +20,12 @@ Subject subject =
 <body>
 
 <h2>科目変更</h2>
+
+<% if(error != null){ %>
+    <p style="color:red;">
+        <%= error %>
+    </p>
+<% } %>
 
 <form action="SubjectUpdateExecute.action" method="post">
 
