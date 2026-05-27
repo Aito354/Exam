@@ -67,6 +67,18 @@
         </style>
 
         <h2>成績一覧（科目）</h2>
+        
+        <c:if test="${not empty error}">
+    <p style="color:red; font-size:14px;">
+        ${error}
+    </p>
+</c:if>
+
+<c:if test="${not empty message}">
+    <p style="color:deepskyblue; font-size:14px;">
+        ${message}
+    </p>
+</c:if>
 
         <div class="area">
 
@@ -148,11 +160,15 @@
                                     <c:choose>
 
                                         <c:when test="${f3 eq s.cd}">
-                                            <option value="${s.cd}" selected>${s.name}</option>
+                                            <option value="${s.cd}" selected>
+                                                ${s.name}
+                                            </option>
                                         </c:when>
 
                                         <c:otherwise>
-                                            <option value="${s.cd}">${s.name}</option>
+                                            <option value="${s.cd}">
+                                                ${s.name}
+                                            </option>
                                         </c:otherwise>
 
                                     </c:choose>

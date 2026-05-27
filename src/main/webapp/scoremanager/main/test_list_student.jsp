@@ -13,7 +13,7 @@
 
         .area{
             border:1px solid #ddd;
-            padding:20px;
+            padding:30px;
             width:900px;
             margin:20px auto;
             background:#fff;
@@ -43,7 +43,7 @@
 
         th,td{
             border-bottom:1px solid #ddd;
-            padding:10px;
+            padding:12px;
             text-align:center;
         }
 
@@ -53,158 +53,167 @@
 
         h2{
             margin-bottom:20px;
+            font-size:40px;
         }
 
         .student-name{
             margin:15px 0;
-            font-size:14px;
+            font-size:18px;
             font-weight:bold;
         }
 
         .message{
             color:deepskyblue;
             font-size:13px;
+            margin-top:20px;
+        }
+
+        .search-table td{
+            border:none;
+            padding:10px;
+        }
+
+        hr{
+            margin:25px 0;
+            border:0;
+            border-top:1px solid #ddd;
         }
 
         </style>
 
         <h2>成績一覧（学生）</h2>
 
-        <!-- 検索エリア -->
+        <!-- エラー -->
+        <c:if test="${not empty error}">
+            <p style="color:red; font-size:14px;">
+                ${error}
+            </p>
+        </c:if>
+
+        <!-- メッセージ -->
+        <c:if test="${not empty message}">
+            <p style="color:deepskyblue; font-size:14px;">
+                ${message}
+            </p>
+        </c:if>
+
+        <!-- 上の検索エリア -->
         <div class="area">
 
             <!-- 科目情報 -->
-            <form action="TestList.action" method="get">
+            <form action="TestListSubjectExecute.action" method="get">
 
-                <table style="border:none;">
+                <table class="search-table">
 
-                    <tr style="border:none;">
+                    <tr>
 
-                        <td style="border:none;">
+                        <td>
                             科目情報
                         </td>
 
-                        <!-- 入学年度 -->
-                        <td style="border:none;">
+                        <td>
 
                             入学年度<br>
 
-                            <select name="entYear">
+                            <select name="f1">
 
                                 <option value="">--------</option>
 
-                                <option value="2023"
-                                    <c:if test="${param.entYear == '2023'}">
-                                        selected
-                                    </c:if>>
-                                    2023
-                                </option>
+                                <c:forEach var="y" begin="2020" end="${year}">
 
-                                <option value="2024"
-                                    <c:if test="${param.entYear == '2024'}">
-                                        selected
-                                    </c:if>>
-                                    2024
-                                </option>
+                                    <c:choose>
 
-                                <option value="2025"
-                                    <c:if test="${param.entYear == '2025'}">
-                                        selected
-                                    </c:if>>
-                                    2025
-                                </option>
+                                        <c:when test="${f1 eq y}">
+                                            <option value="${y}" selected>
+                                                ${y}
+                                            </option>
+                                        </c:when>
+
+                                        <c:otherwise>
+                                            <option value="${y}">
+                                                ${y}
+                                            </option>
+                                        </c:otherwise>
+
+                                    </c:choose>
+
+                                </c:forEach>
 
                             </select>
 
                         </td>
 
-                        <!-- クラス -->
-                        <td style="border:none;">
+                        <td>
 
                             クラス<br>
 
-                            <select name="classNum">
+                            <select name="f2">
 
                                 <option value="">--------</option>
 
-                                <option value="1"
-                                    <c:if test="${param.classNum == '1'}">
-                                        selected
-                                    </c:if>>
-                                    1
-                                </option>
+                                <c:forEach var="c" items="${classList}">
 
-                                <option value="2"
-                                    <c:if test="${param.classNum == '2'}">
-                                        selected
-                                    </c:if>>
-                                    2
-                                </option>
+                                    <c:choose>
+
+                                        <c:when test="${f2 eq c}">
+                                            <option value="${c}" selected>
+                                                ${c}
+                                            </option>
+                                        </c:when>
+
+                                        <c:otherwise>
+                                            <option value="${c}">
+                                                ${c}
+                                            </option>
+                                        </c:otherwise>
+
+                                    </c:choose>
+
+                                </c:forEach>
 
                             </select>
 
                         </td>
 
-                        <!-- 科目 -->
-                        <td style="border:none;">
+                        <td>
 
                             科目<br>
 
-                            <select name="subjectCd">
+                            <select name="f3">
 
                                 <option value="">--------</option>
 
-                                <option value="JAVA">JAVA</option>
-                                <option value="DB">DB</option>
-                                <option value="KOKUGO">国語</option>
-                                <option value="SUGAKU">数学</option>
-                                <option value="RIKA">理科</option>
-                                <option value="JOHO1">情報処理基礎知識Ⅰ</option>
-                                <option value="EIGO">英語コミュニケーション概論</option>
-                                <option value="JFRAME">Javaフレームワーク</option>
-                                <option value="GIT">Git</option>
-                                <option value="H2">H2</option>
-                                <option value="ID">ID管理術</option>
-                                <option value="JSYSTEM">Javaシステム開発</option>
-                                <option value="AWS">AWS</option>
-                                <option value="BEAN">Bean</option>
-                                <option value="C">C言語</option>
-                                <option value="ERROR">エラー対処術</option>
+                                <c:forEach var="s" items="${subjectList}">
+
+                                    <c:choose>
+
+                                        <c:when test="${f3 eq s.cd}">
+                                            <option value="${s.cd}" selected>
+                                                ${s.name}
+                                            </option>
+                                        </c:when>
+
+                                        <c:otherwise>
+                                            <option value="${s.cd}">
+                                                ${s.name}
+                                            </option>
+                                        </c:otherwise>
+
+                                    </c:choose>
+
+                                </c:forEach>
 
                             </select>
 
                         </td>
 
-                        <!-- 回数 -->
-                        <td style="border:none;">
-
-                            回数<br>
-
-                            <select name="num">
-
-                                <option value="">--------</option>
-
-                                <option value="1"
-                                    <c:if test="${param.num == '1'}">
-                                        selected
-                                    </c:if>>
-                                    1
-                                </option>
-
-                                <option value="2"
-                                    <c:if test="${param.num == '2'}">
-                                        selected
-                                    </c:if>>
-                                    2
-                                </option>
-
-                            </select>
-
-                        </td>
-
-                        <td style="border:none;">
+                        <td>
                             <br>
-                            <button type="submit">検索</button>
+
+                            <button type="submit">
+                                検索
+                            </button>
+
                         </td>
 
                     </tr>
@@ -226,37 +235,44 @@
                     type="text"
                     name="no"
                     value="${param.no}"
-                    placeholder="学生番号を入力してください">
+                    placeholder="学生番号を入力してください"
+                    required
+                    pattern="[A-Za-z]+"
+                    title="英字のみ入力してください">
 
-                <button type="submit">検索</button>
+                <button type="submit">
+                    検索
+                </button>
 
             </form>
 
-            <br>
-
             <p class="message">
-                入学年度とクラスと科目を選択してください
+                科目情報または学生情報を入力して検索してください
             </p>
 
         </div>
 
-        <!-- 一覧 -->
-        <c:if test="${not empty list}">
+        <!-- 下の一覧エリア -->
+        <div class="area">
 
-            <div class="area">
+            <div class="student-name">
 
-                <div class="student-name">
-                    氏名：${student.name}（${student.no}）
-                </div>
+                <c:if test="${not empty list}">
+                    氏名：${list[0].studentName}（${student.no}）
+                </c:if>
 
-                <table>
+            </div>
 
-                    <tr>
-                        <th>科目名</th>
-                        <th>科目コード</th>
-                        <th>回数</th>
-                        <th>点数</th>
-                    </tr>
+            <table>
+
+                <tr>
+                    <th>科目名</th>
+                    <th>科目コード</th>
+                    <th>回数</th>
+                    <th>点数</th>
+                </tr>
+
+                <c:if test="${not empty list}">
 
                     <c:forEach var="obj" items="${list}">
 
@@ -274,11 +290,11 @@
 
                     </c:forEach>
 
-                </table>
+                </c:if>
 
-            </div>
+            </table>
 
-        </c:if>
+        </div>
 
     </c:param>
 

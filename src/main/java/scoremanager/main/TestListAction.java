@@ -1,9 +1,13 @@
 package scoremanager.main;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import bean.School;
 import bean.Student;
 import bean.TestListStudent;
+import dao.ClassNumDao;
+import dao.SubjectDao;
 import dao.TestListStudentDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,24 +21,54 @@ public class TestListAction extends Action {
             HttpServletResponse res
     ) throws Exception {
 
+        // 学校情報
+        School school = new School();
+        school.setCd("oom");
+
+        // 年度
+        int year = LocalDate.now().getYear();
+
+        req.setAttribute(
+                "year",
+                year
+        );
+
+        // クラス一覧
+        ClassNumDao cDao =
+                new ClassNumDao();
+
+        req.setAttribute(
+                "classList",
+                cDao.filter(school)
+        );
+
+        // 科目一覧
+        SubjectDao sDao =
+                new SubjectDao();
+
+        req.setAttribute(
+                "subjectList",
+                sDao.filter()
+        );
+
         // パラメータ取得
         String entYear =
-                req.getParameter("entYear");
+                req.getParameter("f1");
 
         String classNum =
-                req.getParameter("classNum");
+                req.getParameter("f2");
 
         String subjectCd =
-                req.getParameter("subjectCd");
+                req.getParameter("f3");
 
         String noStr =
-                req.getParameter("no");
+                req.getParameter("f4");
 
         // 初回表示
-        if (req.getParameter("entYear") == null
-                && req.getParameter("classNum") == null
-                && req.getParameter("subjectCd") == null
-                && req.getParameter("no") == null) {
+        if (req.getParameter("f1") == null
+                && req.getParameter("f2") == null
+                && req.getParameter("f3") == null
+                && req.getParameter("f4") == null) {
 
             req.getRequestDispatcher(
                     "/scoremanager/test_list.jsp"
@@ -75,7 +109,7 @@ public class TestListAction extends Action {
             return;
         }
 
-        // String → int
+        
         int no;
 
         try {

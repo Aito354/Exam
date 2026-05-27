@@ -29,24 +29,53 @@ public class TestRegistExecuteAction extends Action {
         School school = new School();
         school.setCd("oom");
 
-        String[] studentNo =
-                request.getParameterValues("studentNo");
+        String[] studentNo = request.getParameterValues("studentNo");
+        String[] point = request.getParameterValues("point");
 
-        String[] point =
-                request.getParameterValues("point");
+        String subjectCd = request.getParameter("subjectCd");
+        String classNum = request.getParameter("classNum");
+        String entYear = request.getParameter("entYear");
+        String numStr = request.getParameter("num");
 
-        String subjectCd =
-                request.getParameter("subjectCd");
+        // =========================
+        // 未入力チェック（session禁止）
+        // =========================
+        if (studentNo == null || point == null ||
+                subjectCd == null || classNum == null ||
+                entYear == null || numStr == null) {
 
-        String classNum =
-                request.getParameter("classNum");
+            request.setAttribute(
+                    "error",
+                    "未入力の項目があります"
+            );
 
-        String entYear =
-                request.getParameter("entYear");
+            request.getRequestDispatcher(
+                    "/scoremanager/test_regist.jsp"
+            ).forward(request, response);
 
-        int num = Integer.parseInt(
-                request.getParameter("num")
-        );
+            return;
+        }
+
+        int num;
+
+        // =========================
+        // 回数チェック
+        // =========================
+        try {
+            num = Integer.parseInt(numStr);
+        } catch (Exception e) {
+
+            request.setAttribute(
+                    "error",
+                    "回数が不正です"
+            );
+
+            request.getRequestDispatcher(
+                    "/scoremanager/test_regist.jsp"
+            ).forward(request, response);
+
+            return;
+        }
 
         SubjectDao subDao = new SubjectDao();
         Subject subject = subDao.get(subjectCd);
@@ -58,59 +87,56 @@ public class TestRegistExecuteAction extends Action {
 
         TestDao testDao = new TestDao();
 
+        // =========================
+        // 登録処理
+        // =========================
         for (int i = 0; i < studentNo.length; i++) {
 
-            if (point[i] == null ||
-                    point[i].isEmpty()) {
-
+            if (point[i] == null || point[i].isEmpty()) {
                 continue;
             }
 
             int p;
 
             try {
-
                 p = Integer.parseInt(point[i]);
-
             } catch (Exception e) {
 
-                request.getSession().setAttribute(
+                request.setAttribute(
                         "error",
                         "数値を入力してください"
                 );
 
-                response.sendRedirect(
-                    "TestRegist.action?f1=" + entYear
-                    + "&f2=" + classNum
-                    + "&f3=" + subjectCd
-                    + "&f4=" + num
-                );
+                request.getRequestDispatcher(
+                        "/scoremanager/test_regist.jsp"
+                ).forward(request, response);
 
+                connection.close();
                 return;
             }
 
             if (p < 0 || p > 100) {
 
-                request.getSession().setAttribute(
+                request.setAttribute(
                         "error",
                         "0〜100の範囲で入力してください"
                 );
 
-                response.sendRedirect(
-                    "TestRegist.action?f1=" + entYear
-                    + "&f2=" + classNum
-                    + "&f3=" + subjectCd
-                    + "&f4=" + num
-                );
+                request.getRequestDispatcher(
+                        "/scoremanager/test_regist.jsp"
+                ).forward(request, response);
 
+                connection.close();
                 return;
             }
 
-            Student student =
-                    stuDao.get(studentNo[i]);
+            Student student = stuDao.get(studentNo[i]);
+
+            if (student == null || subject == null) {
+                continue;
+            }
 
             Test test = new Test();
-
             test.setStudent(student);
             test.setClassNum(classNum);
             test.setSubject(subject);
@@ -123,6 +149,9 @@ public class TestRegistExecuteAction extends Action {
 
         connection.close();
 
+        // =========================
+        // 完了画面
+        // =========================
         request.getRequestDispatcher(
                 "/scoremanager/test_regist_done.jsp"
         ).forward(request, response);
