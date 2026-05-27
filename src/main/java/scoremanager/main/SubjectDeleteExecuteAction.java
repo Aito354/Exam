@@ -1,12 +1,11 @@
 package scoremanager.main;
 
-import bean.Subject;
 import dao.SubjectDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import tool.Action;
 
-public class SubjectDeleteAction extends Action {
+public class SubjectDeleteExecuteAction extends Action {
 
     @Override
     public void execute(
@@ -20,15 +19,10 @@ public class SubjectDeleteAction extends Action {
         SubjectDao dao =
                 new SubjectDao();
 
-        Subject subject =
-                dao.get(cd);
-
-        request.setAttribute(
-                "subject",
-                subject);
+        dao.delete(cd);
 
         request.getRequestDispatcher(
-                "/scoremanager/main/subject_delete.jsp")
-                .forward(request, response);
+            "/scoremanager/main/subject_delete_done.jsp")
+            .forward(request, response);
     }
 }
